@@ -76,7 +76,7 @@ Instructions for installing Eclipse and automatically installing and
 configuring the plugins we use are found
 in [README-ECLIPSE.md](../server/README-ECLIPSE.md).
 
-* [GitHub](https://github.com/FreeAndFair/ColoradoRLA) for distributed
+* [GitHub](https://github.com/blooregard/ColoradoRLA) for distributed
   version control, issue tracking, and development documentation
 * the
   [PVS specification and verification system](http://pvs.csl.sri.com/)
@@ -325,12 +325,6 @@ Travis CI.
 
 The Eclipse-based build system is built into our Eclipse IDE image and
 our workspace, as specified in `server/eclipse.setup`.
-
-The Make-based system is rooted in our
-top-level [Makefile](../Makefile). That build system not only compiles
-the RLA tool, but also generates documentation, analyzes the system
-for quality and correctness, and more. *(Ed. note: The make-based
-build system has not yet been written.)*
 
 See the instructions in the **Installation and Use** chapter on
 running the development system.

@@ -135,7 +135,6 @@ createdb -O corla corla</code></pre>
 <p><em>TBD discussion of which build systems we use and why.</em></p>
 <p>We provide both an integrated Eclipse-based build system and a traditional Make-based build system. The former permits us to support a rich and interactive design, development, validation, and verification experience in an IDE. The latter facilitates cross-platform, IDE-independent builds and continuous integration with Travis CI.</p>
 <p>The Eclipse-based build system is built into our Eclipse IDE image and our workspace, as specified in <code>server/eclipse.setup</code>.</p>
-<p>The Make-based system is rooted in our top-level <a href="../Makefile">Makefile</a>. That build system not only compiles the RLA tool, but also generates documentation, analyzes the system for quality and correctness, and more. <em>(Ed. note: The make-based build system has not yet been written.)</em></p>
 <p>See the instructions in the <strong>Installation and Use</strong> chapter on running the development system.</p>
 <p>Note that the production client build configuration expects server endpoints to have an <code>/api</code> path prefix. To support user testing, we currently enable browser console logging in all builds.</p>
 <h2 id="quality-assurance">Quality Assurance</h2>

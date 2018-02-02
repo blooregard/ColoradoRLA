@@ -11,7 +11,7 @@ source and freely available via [GitHub](http://github.com). One can
 download the entire project, including all development artifacts and
 source code, via
 the
-[GitHub Colorado RLA project](https://github.com/FreeAndFair/ColoradoRLA) webpage,
+[GitHub Colorado RLA project](https://github.com/blooregard/ColoradoRLA) webpage,
 either by cloning its git repository or as an archive file.
 
 We also automatically build a distribution archive using the Node
@@ -41,7 +41,7 @@ Running the latest development version
 
 For testing purposes, you can run the latest versions of the client
 and server directly from a clone of
-the [git repository](https://github.com/FreeAndFair/ColoradoRLA). One
+the [git repository](https://github.com/blooregard/ColoradoRLA). One
 must configure the database as discussed previously and run both the
 client and the server to test the CORLA system.
 
@@ -65,7 +65,7 @@ with the system to CDOS.
 
 To run the client in a standalone manner (rather than from a deployed
 server), you will need to
-get [Node.js and npm](https://www.npmjs.com/get-npm). Next, run: 
+get [Node.js and npm](https://www.npmjs.com/get-npm). Next, run:
 ```
 cd client
 npm install
