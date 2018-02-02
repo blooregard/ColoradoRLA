@@ -1,7 +1,7 @@
 ColoradoRLA
 ===========
 
-[![Build Status](https://travis-ci.org/blooregard/ColoradoRLA?branch=master)](https://travis-ci.org/blooregard/ColoradoRLA)
+[![Build Status](https://travis-ci.org/blooregard/ColoradoRLA.svg?branch=master)](https://travis-ci.org/blooregard/ColoradoRLA)
 
 The **ColoradoRLA** system is software to facilitate risk-limiting
 audits at the county level, originally developed by [Free & Fair](http://freeandfair.us/blog/risk-limiting-audits/)
