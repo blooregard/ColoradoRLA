@@ -1,7 +1,7 @@
 ColoradoRLA
 ===========
 
-[![Build Status](https://travis-ci.org/blooregard/ColoradoRLA.svg?branch=master)](https://travis-ci.org/blooregard/ColoradoRLA)
+[![Build Status](https://travis-ci.org/blooregard/ColoradoRLA.svg?branch=master)](https://travis-ci.org/blooregard/ColoradoRLA)  [![Maintainability](https://api.codeclimate.com/v1/badges/17fcde3bd45473680eea/maintainability)](https://codeclimate.com/github/blooregard/ColoradoRLA/maintainability) [![Test Coverage](https://api.codeclimate.com/v1/badges/17fcde3bd45473680eea/test_coverage)](https://codeclimate.com/github/blooregard/ColoradoRLA/test_coverage)
 
 The **ColoradoRLA** system is software to facilitate risk-limiting
 audits at the county level, originally developed by [Free & Fair](http://freeandfair.us/blog/risk-limiting-audits/)
@@ -36,29 +36,10 @@ Documentation about this project and the Colorado RLA system includes:
 * the [means by which we validate and verify the system](docs/40_v_and_v.md),
 * a [glossary](docs/89_glossary.md) of the domain terminology used in
   the system,
-* a full [bibliography](docs/99_bibliography.md) is available.
-* a [document describing how we perform project management](docs/30_project_management.md),
-* the [license](LICENSE.md) under which this software is made available,
-  and
-* all [contributors](#contributors) to the design and development of
-  this system are listed below.
+* the [license](LICENSE.md) under which this software is made available
 
 Contributors
 ============
-
-* Joey Dodds (Principled Computer Scientist) RLA core computations
-  implementation
-* Joseph Kiniry (Principled CEO and Chief Scientist) Project Head,
-  author of formal specification, design and implementation of ASMs
-  and 2FA
-* Neal McBurnett (Principled Elections Auditing Expert) RLA expert,
-  design and implementation of data export application
-  and automatic server test infrastructure
-* Morgan Miller (Principled Usability Specialist) UX expert, conducted
-  interviews with CDOS and County personnel, initial UI design
-* Joe Ranweiler (Principled Computer Scientist) Principal author of
-  RLA Tool Client
-* Daniel Zimmerman (Principled Computer Scientist) Principal author of
-  RLA Tool Server
+* Ben Rector
 
 More information about our team members [is available](docs/70_team.md).
