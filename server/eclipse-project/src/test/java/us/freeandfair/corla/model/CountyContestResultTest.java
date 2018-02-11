@@ -23,6 +23,8 @@ import java.util.List;
 import java.util.Map;
 
 import org.testng.Assert;
+import org.testng.annotations.AfterClass;
+import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
 /**
@@ -43,6 +45,11 @@ public class CountyContestResultTest {
    * Sample set for vote ranked order
    */
   private static final List<String> VOTE_RANKED_ORDER;
+  
+  /**
+   * The object under test
+   */
+  private CountyContestResult result = new CountyContestResult();
 
   static {
     VOTE_TOTALS = new HashMap<String, Integer>() {
@@ -67,16 +74,38 @@ public class CountyContestResultTest {
   }
 
   /**
+   * Use reflection to set internal state of the model
+   * @throws SecurityException 
+   * @throws NoSuchFieldException 
+   * @throws IllegalAccessException 
+   * @throws IllegalArgumentException 
+   */
+  @BeforeClass
+  public void oneTimeSetUp() throws NoSuchFieldException, SecurityException, IllegalArgumentException, IllegalAccessException {
+    final Field field = CountyContestResult.class.getDeclaredField("my_vote_totals");
+    
+    final boolean myVoteTotalAccessible = field.isAccessible();
+    
+    field.setAccessible(true);
+    field.set(result, VOTE_TOTALS);
+    
+    field.setAccessible(myVoteTotalAccessible);
+  }
+  
+  /**
+   * Clean up after tests
+   */
+  @AfterClass
+  @SuppressWarnings("PMD.UncommentedEmptyMethodBody")
+  public void oneTimeTeardown() {
+ 
+  }
+  
+  /**
    * A single test case that verifies the functionality.
    */
   @Test()
-  public void testRankedChoices() throws Exception {
-    final CountyContestResult result = new CountyContestResult();
-
-    final Field field = CountyContestResult.class.getDeclaredField("my_vote_totals");
-    field.setAccessible(true);
-    field.set(result, VOTE_TOTALS);
-
+  public void testRankedChoices()  {
     final List<String> list = result.rankedChoices();
     Assert.assertEquals(list, VOTE_RANKED_ORDER);
   }

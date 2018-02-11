@@ -43,6 +43,9 @@ public class PseudoRandomNumberGeneratorTest {
     Assert.assertEquals(numbers, expected);
   }
   
+  /**
+   * A test case to verify the random selection with duplicates allowed
+   */
   @Test()
   public void testRandomGeneratorDups() {
     final String seed = "3546311556112163624615351222";
