@@ -5,6 +5,4 @@ set -eux -o pipefail
 "${TRAVIS_BUILD_DIR}/ci/changes-in-dir" server || exit 0
 
 cd "${SERVER_DIR}"
-mvn verify
-
-mvn cobertura:cobertura
+mvn verify cobertura:cobertura

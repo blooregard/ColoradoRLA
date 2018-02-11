@@ -59,4 +59,14 @@ public class PseudoRandomNumberGeneratorTest {
         787, 537);
     Assert.assertEquals(numbers, expected);
   }
+  
+  /**
+   * Test the seed verification class method
+   */
+  @Test()
+  public void testSeedOnlyContainsDigits() {
+    Assert.assertFalse(PseudoRandomNumberGenerator.seedOnlyContainsDigits("AAAAAA"));
+    
+    Assert.assertTrue(PseudoRandomNumberGenerator.seedOnlyContainsDigits("1234567890"));
+  }
 }
