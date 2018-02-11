@@ -2,10 +2,15 @@
  * Free & Fair Colorado RLA System
  * 
  * @title ColoradoRLA
+ * 
  * @created Aug 19, 2017
+ * 
  * @copyright 2017 Colorado Department of State
+ * 
  * @license SPDX-License-Identifier: AGPL-3.0-or-later
+ * 
  * @creator Daniel M. Zimmerman <dmz@freeandfair.us>
+ * 
  * @description A system to assist in conducting statewide risk-limiting audits.
  */
 
@@ -60,14 +65,11 @@ import us.freeandfair.corla.util.SuppressFBWarnings;
  */
 @Entity
 @Cacheable(true)
-@Table(name = "county_contest_result",
-       uniqueConstraints = {
-         @UniqueConstraint(columnNames = {"county_id", "contest_id"}) },
-       indexes = { @Index(name = "idx_ccr_county_contest", 
-                          columnList = "county_id, contest_id",
-                          unique = true),
-                   @Index(name = "idx_ccr_county", columnList = "county_id"),
-                   @Index(name = "idx_ccr_contest", columnList = "contest_id") })
+@Table(name = "county_contest_result", uniqueConstraints = {
+    @UniqueConstraint(columnNames = {"county_id", "contest_id"})}, indexes = {
+        @Index(name = "idx_ccr_county_contest", columnList = "county_id, contest_id", unique = true),
+        @Index(name = "idx_ccr_county", columnList = "county_id"),
+        @Index(name = "idx_ccr_contest", columnList = "contest_id")})
 @SuppressWarnings({"PMD.TooManyMethods", "PMD.ImmutableField", "PMD.ExcessiveImports",
     "PMD.GodClass"})
 public class CountyContestResult implements PersistentEntity, Serializable {
@@ -80,12 +82,12 @@ public class CountyContestResult implements PersistentEntity, Serializable {
    * The "result_id" string.
    */
   private static final String RESULT_ID = "result_id";
-  
+
   /**
    * The serialVersionUID.
    */
   private static final long serialVersionUID = 1L;
-  
+
   /**
    * The ID number.
    */
@@ -93,15 +95,15 @@ public class CountyContestResult implements PersistentEntity, Serializable {
   @Column(updatable = false, nullable = false)
   @GeneratedValue(strategy = GenerationType.SEQUENCE)
   private Long my_id;
-  
+
   /**
    * The version (for optimistic locking).
    */
   @Version
   private Long my_version;
-  
+
   /**
-   * The county to which this contest result set belongs. 
+   * The county to which this contest result set belongs.
    */
   @ManyToOne(optional = false, fetch = FetchType.LAZY)
   @JoinColumn
@@ -119,59 +121,57 @@ public class CountyContestResult implements PersistentEntity, Serializable {
    */
   @Column(updatable = false, nullable = false)
   private Integer my_winners_allowed;
-  
+
   /**
    * The set of contest winners.
    */
   @Column(name = "winners", columnDefinition = "text")
   @Convert(converter = StringSetConverter.class)
   private Set<String> my_winners = new HashSet<>();
-  
+
   /**
    * The set of contest losers.
    */
   @Column(name = "losers", columnDefinition = "text")
   @Convert(converter = StringSetConverter.class)
   private Set<String> my_losers = new HashSet<>();
-  
+
   /**
    * A map from choices to vote totals.
    */
   @ElementCollection(fetch = FetchType.EAGER)
-  @CollectionTable(name = "county_contest_vote_total",
-                   joinColumns = @JoinColumn(name = RESULT_ID,
-                                             referencedColumnName = MY_ID))
+  @CollectionTable(name = "county_contest_vote_total", joinColumns = @JoinColumn(name = RESULT_ID, referencedColumnName = MY_ID))
   @MapKeyColumn(name = "choice")
   @Column(name = "vote_total")
   private Map<String, Integer> my_vote_totals = new HashMap<>();
-  
+
   /**
    * The minimum pairwise margin between a winner and a loser.
    */
   private Integer my_min_margin;
-  
+
   /**
    * The maximum pairwise margin between a winner and a loser.
    */
   private Integer my_max_margin;
-  
+
   /**
    * The total number of ballots cast in this county.
    */
   private Integer my_county_ballot_count = 0;
-  
+
   /**
    * The total number of ballots cast in this county that contain this contest.
    */
   private Integer my_contest_ballot_count = 0;
-  
+
   /**
    * Constructs a new empty CountyContestResult (solely for persistence).
    */
   public CountyContestResult() {
     super();
   }
-  
+
   /**
    * Constructs a new CountyContestResult for the specified county ID and
    * contest.
@@ -190,7 +190,7 @@ public class CountyContestResult implements PersistentEntity, Serializable {
       }
     }
   }
- 
+
   /**
    * {@inheritDoc}
    */
@@ -206,7 +206,7 @@ public class CountyContestResult implements PersistentEntity, Serializable {
   public void setID(final Long the_id) {
     my_id = the_id;
   }
-  
+
   /**
    * {@inheritDoc}
    */
@@ -214,51 +214,51 @@ public class CountyContestResult implements PersistentEntity, Serializable {
   public Long version() {
     return my_version;
   }
-  
+
   /**
    * @return the county for this CountyContestResult.
    */
   public County county() {
     return my_county;
   }
-  
+
   /**
    * @return the contest for this CountyContestResult.
    */
   public Contest contest() {
     return my_contest;
   }
-  
+
   /**
    * @return the winners for thie CountyContestResult.
    */
   public Set<String> winners() {
     return Collections.unmodifiableSet(my_winners);
   }
-  
+
   /**
    * @return the losers for this CountyContestResult.
    */
   public Set<String> losers() {
     return Collections.unmodifiableSet(my_losers);
   }
-  
+
   /**
    * @return a map from choices to vote totals.
    */
   public Map<String, Integer> voteTotals() {
     return Collections.unmodifiableMap(my_vote_totals);
   }
-  
+
   /**
    * @return a list of the choices in descending order by number of votes
-   * received.
+   *         received.
    */
   public List<String> rankedChoices() {
     final List<String> result = new ArrayList<String>();
-    
-    final SortedMap<Integer, List<String>> sorted_totals = 
-        new TreeMap<Integer, List<String>>(new ReverseIntegerComparator());
+
+    final SortedMap<Integer, List<String>> sorted_totals =
+        new TreeMap<Integer, List<String>>((a, b) -> b.compareTo(a));
     for (final Entry<String, Integer> e : my_vote_totals.entrySet()) {
       final List<String> list = sorted_totals.get(e.getValue());
       if (list == null) {
@@ -266,8 +266,8 @@ public class CountyContestResult implements PersistentEntity, Serializable {
       }
       sorted_totals.get(e.getValue()).add(e.getKey());
     }
-    
-    final Iterator<Entry<Integer, List<String>>> iterator = 
+
+    final Iterator<Entry<Integer, List<String>>> iterator =
         sorted_totals.entrySet().iterator();
     while (iterator.hasNext()) {
       final Entry<Integer, List<String>> entry = iterator.next();
@@ -275,38 +275,37 @@ public class CountyContestResult implements PersistentEntity, Serializable {
     }
     return result;
   }
-  
+
   /**
-   * Compute the pairwise margin between the specified choices.
-   * If the first choice has more votes than the second, the
-   * result will be positive; if the second choie has more 
-   * votes than the first, the result will be negative; if they
-   * have the same number of votes, the result will be 0.
+   * Compute the pairwise margin between the specified choices. If the first
+   * choice has more votes than the second, the result will be positive; if the
+   * second choie has more votes than the first, the result will be negative; if
+   * they have the same number of votes, the result will be 0.
    * 
    * @param the_first_choice The first choice.
    * @param the_second_choice The second choice.
-   * @return the pairwise margin between the two choices, as
-   * an OptionalInt (empty if the margin cannot be calculated).
+   * @return the pairwise margin between the two choices, as an OptionalInt
+   *         (empty if the margin cannot be calculated).
    */
   public OptionalInt pairwiseMargin(final String the_first_choice,
                                     final String the_second_choice) {
     final Integer first_votes = my_vote_totals.get(the_first_choice);
     final Integer second_votes = my_vote_totals.get(the_second_choice);
     final OptionalInt result;
-    
+
     if (first_votes == null || second_votes == null) {
       result = OptionalInt.empty();
     } else {
       result = OptionalInt.of(first_votes - second_votes);
     }
-    
+
     return result;
   }
-  
+
   /**
-   * Computes the margin between the specified choice and the next choice. 
-   * If the specified choice is the last choice, or is not a valid choice,
-   * the margin is empty. 
+   * Computes the margin between the specified choice and the next choice. If
+   * the specified choice is the last choice, or is not a valid choice, the
+   * margin is empty.
    * 
    * @param the_choice The choice.
    * @return the margin.
@@ -315,7 +314,7 @@ public class CountyContestResult implements PersistentEntity, Serializable {
     final OptionalInt result;
     final List<String> choices = rankedChoices();
     int index = choices.indexOf(the_choice);
-    
+
     if (index < 0 || index == choices.size() - 1) {
       result = OptionalInt.empty();
     } else {
@@ -327,21 +326,20 @@ public class CountyContestResult implements PersistentEntity, Serializable {
         index = index + 1;
       }
       if (losers().contains(loser)) {
-        result = OptionalInt.of(voteTotals().get(the_choice) - 
-                                voteTotals().get(loser));
+        result = OptionalInt.of(voteTotals().get(the_choice) - voteTotals().get(loser));
       } else {
         // there was no nearest loser, maybe there are only winners
         result = OptionalInt.empty();
       }
     }
-    
+
     return result;
   }
-  
+
   /**
    * Computes the diluted margin between the specified choice and the nearest
-   * loser. If the specified choice is the last choice or is not a valid 
-   * choice, or the margin is undefined, the result is null.
+   * loser. If the specified choice is the last choice or is not a valid choice,
+   * or the margin is undefined, the result is null.
    * 
    * @param the_choice The choice.
    * @return the margin.
@@ -349,20 +347,19 @@ public class CountyContestResult implements PersistentEntity, Serializable {
   public BigDecimal countyDilutedMarginToNearestLoser(final String the_choice) {
     BigDecimal result = null;
     final OptionalInt margin = marginToNearestLoser(the_choice);
-    
+
     if (margin.isPresent() && my_county_ballot_count > 0) {
-      result = BigDecimal.valueOf(margin.getAsInt()).
-                   divide(BigDecimal.valueOf(my_county_ballot_count), 
-                          MathContext.DECIMAL128);
+      result = BigDecimal.valueOf(margin.getAsInt())
+          .divide(BigDecimal.valueOf(my_county_ballot_count), MathContext.DECIMAL128);
     }
-    
+
     return result;
   }
-  
+
   /**
    * Computes the diluted margin between the specified choice and the nearest
-   * loser. If the specified choice is the last choice or is not a valid 
-   * choice, or the margin is undefined, the result is null.
+   * loser. If the specified choice is the last choice or is not a valid choice,
+   * or the margin is undefined, the result is null.
    * 
    * @param the_choice The choice.
    * @return the margin.
@@ -370,100 +367,98 @@ public class CountyContestResult implements PersistentEntity, Serializable {
   public BigDecimal contestDilutedMarginToNearestLoser(final String the_choice) {
     BigDecimal result = null;
     final OptionalInt margin = marginToNearestLoser(the_choice);
-    
+
     if (margin.isPresent() && my_contest_ballot_count > 0) {
-      result = BigDecimal.valueOf(margin.getAsInt()).
-                   divide(BigDecimal.valueOf(my_contest_ballot_count), 
-                          MathContext.DECIMAL128);
+      result = BigDecimal.valueOf(margin.getAsInt())
+          .divide(BigDecimal.valueOf(my_contest_ballot_count), MathContext.DECIMAL128);
     }
-    
+
     return result;
   }
-  
+
   /**
    * @return the number of winners allowed in this contest.
    */
   public Integer winnersAllowed() {
     return my_winners_allowed;
   }
-  
+
   /**
-   * @return the number of ballots cast in this county that include this contest.
+   * @return the number of ballots cast in this county that include this
+   *         contest.
    */
   public Integer contestBallotCount() {
     return my_contest_ballot_count;
   }
-  
+
   /**
    * @return the number of ballots cast in this county.
    */
   public Integer countyBallotCount() {
     return my_county_ballot_count;
   }
-  
+
   /**
    * @return the maximum margin between a winner and a loser.
    */
   public Integer maxMargin() {
     return my_max_margin;
   }
-  
+
   /**
    * @return the minimum margin between a winner and a loser.
    */
   public Integer minMargin() {
     return my_min_margin;
   }
-  
+
   /**
-   * @return the county diluted margin for this contest, defined as the
-   * minimum margin divided by the number of ballots cast in the county.
+   * @return the county diluted margin for this contest, defined as the minimum
+   *         margin divided by the number of ballots cast in the county.
    * @exception IllegalStateException if no ballots have been counted.
    */
   public BigDecimal countyDilutedMargin() {
     BigDecimal result;
     if (my_county_ballot_count > 0) {
-      result = BigDecimal.valueOf(my_min_margin).
-               divide(BigDecimal.valueOf(my_county_ballot_count), 
-                      MathContext.DECIMAL128);
+      result = BigDecimal.valueOf(my_min_margin)
+          .divide(BigDecimal.valueOf(my_county_ballot_count), MathContext.DECIMAL128);
       if (my_losers.isEmpty()) {
         // if we only have winners, there is no margin
         result = BigDecimal.ONE;
       }
-      
+
       // TODO: how do we handle a tie?
     } else {
       throw new IllegalStateException("attempted to calculate diluted margin with no ballots");
     }
-    
+
     return result;
   }
-  
+
   /**
-   * @return the diluted margin for this contest, defined as the
-   * minimum margin divided by the number of ballots cast in this county
-   * that contain this contest.
+   * @return the diluted margin for this contest, defined as the minimum margin
+   *         divided by the number of ballots cast in this county that contain
+   *         this contest.
    * @exception IllegalStateException if no ballots have been counted.
    */
   public BigDecimal contestDilutedMargin() {
     BigDecimal result;
     if (my_contest_ballot_count > 0) {
-      result = BigDecimal.valueOf(my_min_margin).
-               divide(BigDecimal.valueOf(my_contest_ballot_count), 
-                      MathContext.DECIMAL128);
+      result = BigDecimal.valueOf(my_min_margin)
+          .divide(BigDecimal.valueOf(my_contest_ballot_count), MathContext.DECIMAL128);
       if (my_losers.isEmpty()) {
         // if we only have winners, there is no margin
         result = BigDecimal.ONE;
       }
-      
+
       // TODO: how do we handle a tie?
     } else {
       throw new IllegalStateException("attempted to calculate diluted margin with no ballots");
     }
-    
+
     return result;
   }
-  
+
   /**
    * Reset the vote totals and all related data in this CountyContestResult.
    */
@@ -475,7 +470,7 @@ public class CountyContestResult implements PersistentEntity, Serializable {
     }
     updateResults();
   }
-  
+
   /**
    * Update the vote totals using the data from the specified CVR.
    * 
@@ -491,14 +486,14 @@ public class CountyContestResult implements PersistentEntity, Serializable {
     }
     my_county_ballot_count = Integer.valueOf(my_county_ballot_count + 1);
   }
-  
+
   /**
    * Updates the stored results.
    */
   public void updateResults() {
     // first, sort the vote totals
-    final SortedMap<Integer, List<String>> sorted_totals = 
-        new TreeMap<Integer, List<String>>(new ReverseIntegerComparator());
+    final SortedMap<Integer, List<String>> sorted_totals =
+        new TreeMap<Integer, List<String>>((a, b) -> b.compareTo(a));
     for (final Entry<String, Integer> e : my_vote_totals.entrySet()) {
       final List<String> list = sorted_totals.get(e.getValue());
       if (list == null) {
@@ -507,7 +502,7 @@ public class CountyContestResult implements PersistentEntity, Serializable {
       sorted_totals.get(e.getValue()).add(e.getKey());
     }
     // next, get the winners and losers
-    final Iterator<Entry<Integer, List<String>>> vote_total_iterator = 
+    final Iterator<Entry<Integer, List<String>>> vote_total_iterator =
         sorted_totals.entrySet().iterator();
     Entry<Integer, List<String>> entry = null;
     while (vote_total_iterator.hasNext() && my_winners.size() < my_winners_allowed) {
@@ -517,7 +512,8 @@ public class CountyContestResult implements PersistentEntity, Serializable {
         my_winners.addAll(choices);
       } else {
         // we are arbitrarily making the first choices in the list "winners" and
-        // the last choices in the list "losers", but since it's a tie, it really
+        // the last choices in the list "losers", but since it's a tie, it
+        // really
         // doesn't matter
         final int to_add = my_winners_allowed - my_winners.size();
         my_winners.addAll(choices.subList(0, to_add));
@@ -528,10 +524,10 @@ public class CountyContestResult implements PersistentEntity, Serializable {
       // all the other choices count as losers
       my_losers.addAll(vote_total_iterator.next().getValue());
     }
-    
+
     calculateMargins();
   }
-  
+
   /**
    * Calculates all the pairwise margins using the vote totals.
    */
@@ -551,7 +547,7 @@ public class CountyContestResult implements PersistentEntity, Serializable {
       }
     }
   }
-  
+
   /**
    * @return a String representation of this contest.
    */
@@ -579,7 +575,7 @@ public class CountyContestResult implements PersistentEntity, Serializable {
     }
     return result;
   }
-  
+
   /**
    * @return a hash code for this object.
    */
@@ -587,27 +583,5 @@ public class CountyContestResult implements PersistentEntity, Serializable {
   public int hashCode() {
     return id().hashCode();
   }
-  
-  /**
-   * A reverse integer comparator, for sorting lists of integers in reverse.
-   */
-  @SuppressFBWarnings("RV_NEGATING_RESULT_OF_COMPARETO")
-  public static class ReverseIntegerComparator 
-      implements Comparator<Integer>, Serializable {
-    /**
-     * The serialVersionUID.
-     */
-    private static final long serialVersionUID = 1L;
-    
-   /**
-     * Compares two integers. Returns the negation of the regular integer 
-     * comparator result.
-     * 
-     * @param the_first The first integer.
-     * @param the_second The second integer.
-     */
-    public int compare(final Integer the_first, final Integer the_second) {
-      return -(the_first.compareTo(the_second));
-    }
-  }
+
 }

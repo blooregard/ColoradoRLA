@@ -42,4 +42,18 @@ public class PseudoRandomNumberGeneratorTest {
         537, 197);
     Assert.assertEquals(numbers, expected);
   }
+  
+  @Test()
+  public void testRandomGeneratorDups() {
+    final String seed = "3546311556112163624615351222";
+    final PseudoRandomNumberGenerator gen =
+        new PseudoRandomNumberGenerator(seed, true, 1, 876);
+    final List<Integer> numbers = gen.getRandomNumbers(0, 46);
+    final List<Integer> expected = 
+        Arrays.asList(740, 180, 264, 789, 238, 448, 272, 611, 761, 208, 596, 88, 160, 
+        113, 766, 427, 184, 816, 653, 411, 779, 331, 339, 487, 594, 235, 65, 527, 821, 
+        490, 461, 611, 251, 471, 414, 174, 567, 300, 134, 144, 357, 786, 792, 218, 550,  
+        787, 537);
+    Assert.assertEquals(numbers, expected);
+  }
 }

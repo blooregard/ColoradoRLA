@@ -1,4 +1,5 @@
 /server/eclipse-project/.settings/org.testng.eclipse.maven.prefs
+/server/eclipse-project/test-output/
 /specs/pvs/.pvscontext
 /specs/pvs/corla.tex
 .DS_Store
