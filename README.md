@@ -1,7 +1,7 @@
 ColoradoRLA
 ===========
 
-[![Build Status](https://travis-ci.org/blooregard/ColoradoRLA.svg?branch=master)](https://travis-ci.org/blooregard/ColoradoRLA)  [![Maintainability](https://api.codeclimate.com/v1/badges/17fcde3bd45473680eea/maintainability)](https://codeclimate.com/github/blooregard/ColoradoRLA/maintainability) [![Test Coverage](https://api.codeclimate.com/v1/badges/17fcde3bd45473680eea/test_coverage)](https://codeclimate.com/github/blooregard/ColoradoRLA/test_coverage)
+[![Build Status](https://travis-ci.org/blooregard/ColoradoRLA.svg?branch=master)](https://travis-ci.org/blooregard/ColoradoRLA)  [![Maintainability](https://api.codeclimate.com/v1/badges/17fcde3bd45473680eea/maintainability)](https://codeclimate.com/github/blooregard/ColoradoRLA/maintainability) [![codecov](https://codecov.io/gh/blooregard/ColoradoRLA/branch/master/graph/badge.svg)](https://codecov.io/gh/blooregard/ColoradoRLA/branch/master) 
 
 The **ColoradoRLA** system is software to facilitate risk-limiting
 audits at the county level, originally developed by [Free & Fair](http://freeandfair.us/blog/risk-limiting-audits/)
