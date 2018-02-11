@@ -23,7 +23,6 @@ import java.math.BigDecimal;
 import java.math.MathContext;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -55,7 +54,6 @@ import javax.persistence.Version;
 
 import us.freeandfair.corla.persistence.PersistentEntity;
 import us.freeandfair.corla.persistence.StringSetConverter;
-import us.freeandfair.corla.util.SuppressFBWarnings;
 
 /**
  * A class representing the results for a single contest for a single county.

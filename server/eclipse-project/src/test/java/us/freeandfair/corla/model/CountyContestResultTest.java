@@ -49,7 +49,7 @@ public class CountyContestResultTest {
   /**
    * The object under test
    */
-  private CountyContestResult result = new CountyContestResult();
+  final private CountyContestResult result = new CountyContestResult();
 
   static {
     VOTE_TOTALS = new HashMap<String, Integer>() {
