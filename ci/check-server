@@ -6,3 +6,5 @@ set -eux -o pipefail
 
 cd "${SERVER_DIR}"
 mvn verify
+
+mvn cobertura:cobertura

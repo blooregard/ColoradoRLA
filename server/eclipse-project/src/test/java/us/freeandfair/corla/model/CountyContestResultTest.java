@@ -79,7 +79,6 @@ public class CountyContestResultTest {
 
     final List<String> list = result.rankedChoices();
     Assert.assertEquals(list, VOTE_RANKED_ORDER);
-
   }
 
 }
