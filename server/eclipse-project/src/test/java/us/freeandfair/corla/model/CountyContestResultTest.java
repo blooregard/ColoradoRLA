@@ -17,8 +17,10 @@
 package us.freeandfair.corla.model;
 
 import java.lang.reflect.Field;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 
@@ -45,6 +47,21 @@ public class CountyContestResultTest {
    * Sample set for vote ranked order
    */
   private static final List<String> VOTE_RANKED_ORDER;
+  
+  /**
+   * Test for only 1 winner
+   */
+  private static final Integer WINNERS_ALLOWED = 1;
+  
+  /**
+   * Smallest margin test sample
+   */
+  private static final Integer SMALLEST_MARGIN = 4;
+  
+  /**
+   * Number of ballots cast
+   */
+  private static final Integer BALLOTS_CAST = 20;
   
   /**
    * The object under test
@@ -82,14 +99,26 @@ public class CountyContestResultTest {
    */
   @BeforeClass
   public void oneTimeSetUp() throws NoSuchFieldException, SecurityException, IllegalArgumentException, IllegalAccessException {
-    final Field field = CountyContestResult.class.getDeclaredField("my_vote_totals");
+    final Field my_vote_totals = CountyContestResult.class.getDeclaredField("my_vote_totals");
+    final Field my_winners_allowed = CountyContestResult.class.getDeclaredField("my_winners_allowed");
+    final Field my_county_ballot_count = CountyContestResult.class.getDeclaredField("my_county_ballot_count");
     
-    final boolean myVoteTotalAccessible = field.isAccessible();
+    final boolean myVoteTotalAccessible = my_vote_totals.isAccessible();
+    final boolean myWinnersAllowedAccessible = my_winners_allowed.isAccessible();
+    final boolean myCountyBallotCount = my_county_ballot_count.isAccessible();
     
-    field.setAccessible(true);
-    field.set(result, VOTE_TOTALS);
+    my_vote_totals.setAccessible(true);
+    my_vote_totals.set(result, VOTE_TOTALS);
     
-    field.setAccessible(myVoteTotalAccessible);
+    my_winners_allowed.setAccessible(true);
+    my_winners_allowed.set(result, WINNERS_ALLOWED);
+    
+    my_county_ballot_count.setAccessible(true);
+    my_county_ballot_count.set(result, BALLOTS_CAST);
+    
+    my_vote_totals.setAccessible(myVoteTotalAccessible);
+    my_winners_allowed.setAccessible(myWinnersAllowedAccessible);
+    my_county_ballot_count.setAccessible(myCountyBallotCount);
   }
   
   /**
@@ -104,10 +133,34 @@ public class CountyContestResultTest {
   /**
    * A single test case that verifies the functionality.
    */
-  @Test()
+  @Test(priority = 1)
   public void testRankedChoices()  {
     final List<String> list = result.rankedChoices();
     Assert.assertEquals(list, VOTE_RANKED_ORDER);
+  }
+  
+  /**
+   * A unit test that verifies the side effects of the updateResults method
+   * This unit test is the poster child of White Box testing and shows the
+   * need for a refactoring of updateResults.
+   */
+  @Test(priority = 2)
+  public void testUpdateResults() {
+    result.updateResults();
+    
+    Assert.assertEquals(result.minMargin(), SMALLEST_MARGIN);
+    Assert.assertEquals(result.winners(), VOTE_RANKED_ORDER.subList(0, 1));
+    Assert.assertEquals(result.losers(), new HashSet<String>(VOTE_RANKED_ORDER.subList(1, 5)));
+  }
+  
+  /**
+   * A unit test to validate the diluted margin calculation
+   */
+  @Test(priority = 3)
+  public void testCountyDilutedMargin() {
+    final BigDecimal margin = result.countyDilutedMargin();
+    
+    Assert.assertEquals(margin, new BigDecimal("0.2"));
   }
 
 }
