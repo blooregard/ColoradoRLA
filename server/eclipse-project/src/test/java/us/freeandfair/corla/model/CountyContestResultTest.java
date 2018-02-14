@@ -66,7 +66,7 @@ public class CountyContestResultTest {
   /**
    * The object under test
    */
-  final private CountyContestResult result = new CountyContestResult();
+  private CountyContestResult result = new CountyContestResult();
 
   static {
     VOTE_TOTALS = new HashMap<String, Integer>() {
@@ -89,6 +89,36 @@ public class CountyContestResultTest {
       }
     };
   }
+  
+  /**
+   * Populate a CountyContestResult to use for testing
+   */
+  public CountyContestResult createTestResult() throws NoSuchFieldException, SecurityException, IllegalArgumentException, IllegalAccessException{
+    final CountyContestResult tesResult = new CountyContestResult();
+    
+    final Field my_vote_totals = CountyContestResult.class.getDeclaredField("my_vote_totals");
+    final Field my_winners_allowed = CountyContestResult.class.getDeclaredField("my_winners_allowed");
+    final Field my_county_ballot_count = CountyContestResult.class.getDeclaredField("my_county_ballot_count");
+    
+    final boolean myVoteTotalAccessible = my_vote_totals.isAccessible();
+    final boolean myWinnersAllowedAccessible = my_winners_allowed.isAccessible();
+    final boolean myCountyBallotCount = my_county_ballot_count.isAccessible();
+    
+    my_vote_totals.setAccessible(true);
+    my_vote_totals.set(tesResult, VOTE_TOTALS);
+    
+    my_winners_allowed.setAccessible(true);
+    my_winners_allowed.set(tesResult, WINNERS_ALLOWED);
+    
+    my_county_ballot_count.setAccessible(true);
+    my_county_ballot_count.set(tesResult, BALLOTS_CAST);
+    
+    my_vote_totals.setAccessible(myVoteTotalAccessible);
+    my_winners_allowed.setAccessible(myWinnersAllowedAccessible);
+    my_county_ballot_count.setAccessible(myCountyBallotCount);
+    
+    return tesResult;
+  }
 
   /**
    * Use reflection to set internal state of the model
@@ -99,26 +129,7 @@ public class CountyContestResultTest {
    */
   @BeforeClass
   public void oneTimeSetUp() throws NoSuchFieldException, SecurityException, IllegalArgumentException, IllegalAccessException {
-    final Field my_vote_totals = CountyContestResult.class.getDeclaredField("my_vote_totals");
-    final Field my_winners_allowed = CountyContestResult.class.getDeclaredField("my_winners_allowed");
-    final Field my_county_ballot_count = CountyContestResult.class.getDeclaredField("my_county_ballot_count");
-    
-    final boolean myVoteTotalAccessible = my_vote_totals.isAccessible();
-    final boolean myWinnersAllowedAccessible = my_winners_allowed.isAccessible();
-    final boolean myCountyBallotCount = my_county_ballot_count.isAccessible();
-    
-    my_vote_totals.setAccessible(true);
-    my_vote_totals.set(result, VOTE_TOTALS);
-    
-    my_winners_allowed.setAccessible(true);
-    my_winners_allowed.set(result, WINNERS_ALLOWED);
-    
-    my_county_ballot_count.setAccessible(true);
-    my_county_ballot_count.set(result, BALLOTS_CAST);
-    
-    my_vote_totals.setAccessible(myVoteTotalAccessible);
-    my_winners_allowed.setAccessible(myWinnersAllowedAccessible);
-    my_county_ballot_count.setAccessible(myCountyBallotCount);
+    result = createTestResult();
   }
   
   /**
