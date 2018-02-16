@@ -67,7 +67,7 @@ public final class CountyQueries {
       final CriteriaQuery<County> cq = cb.createQuery(County.class);
       final Root<County> root = cq.from(County.class);
       cq.select(root).where(cb.or(cb.like(root.get("my_name"), "%" + the_string + "%"),
-                                  cb.equal(root.get("my_identifier"), parsed_id)));
+                                  cb.equal(root.get("my_id"), parsed_id)));
       final TypedQuery<County> query = s.createQuery(cq);
       final List<County> query_results = query.getResultList();
       // if there's exactly one result, return that

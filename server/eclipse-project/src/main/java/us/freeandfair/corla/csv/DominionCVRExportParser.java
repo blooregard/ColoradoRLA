@@ -42,8 +42,10 @@ import us.freeandfair.corla.model.Contest;
 import us.freeandfair.corla.model.County;
 import us.freeandfair.corla.model.CountyContestResult;
 import us.freeandfair.corla.model.CountyDashboard;
+import us.freeandfair.corla.model.PoliticalParty;
 import us.freeandfair.corla.persistence.Persistence;
 import us.freeandfair.corla.query.CountyContestResultQueries;
+import us.freeandfair.corla.query.PartyBallotTypeQueries;
 import us.freeandfair.corla.util.ExponentialBackoffHelper;
 
 /**
@@ -178,6 +180,11 @@ public class DominionCVRExportParser implements CVRExportParser {
    * The list of contests parsed from the supplied data export.
    */
   private final List<Contest> my_contests = new ArrayList<Contest>();
+  
+  /**
+   * The set of party specific contests parties
+   */
+  private final Set<PoliticalParty> my_parties = new HashSet<PoliticalParty>();
 
   /**
    * The list of county contest results we build from the supplied
@@ -357,9 +364,13 @@ public class DominionCVRExportParser implements CVRExportParser {
       final List<Choice> choices = new ArrayList<Choice>();
       final int end = index + the_choice_counts.get(cn); 
       boolean write_in = false;
+      PoliticalParty party = null;
       while (index < end) {
         final String ch = the_choice_line.get(index).trim();
         final String ex = the_expl_line.get(index).trim();
+        if (PoliticalParty.contains(ex)) {
+          party = PoliticalParty.ignoreCaseValueOf(ex);
+        }
         // "Write-in" is a fictitious candidate that denotes the beginning of
         // the list of qualified write-in candidates
         final boolean fictitious = "Write-in".equals(ch);
@@ -372,18 +383,26 @@ public class DominionCVRExportParser implements CVRExportParser {
         index = index + 1;
       }
       // now that we have all the choices, we can create a Contest object for 
-      // this contest (note the empty contest description at the moment, below, 
-      // as that's not in the CVR files and may not actually be used)
-      // note that we're using the "Vote For" number as the number of winners
+      // this contest. If a 
+      // Note that we're using the "Vote For" number as the number of winners
       // allowed as well, because the Dominion format doesn't give us that
       // separately
-      final Contest c = new Contest(cn, my_county, "", choices, 
+      String description = "";
+      if (party != null) {
+        my_parties.add(party);
+        description = party.name();
+      }
+      
+      final Contest c = new Contest(cn, my_county, description, choices, 
                                     the_votes_allowed.get(cn), the_votes_allowed.get(cn),
                                     contest_count);
       contest_count = contest_count + 1;
       Persistence.saveOrUpdate(c);
       final CountyContestResult r = 
           CountyContestResultQueries.matching(my_county, c);
+      
+      
+      
       my_contests.add(c);
       my_results.add(r);
     }
@@ -713,6 +732,10 @@ public class DominionCVRExportParser implements CVRExportParser {
         for (final CountyContestResult r : my_results) {
           r.updateResults();
           Persistence.saveOrUpdate(r);
+        }
+        
+        if (!my_parties.isEmpty()) {
+          PartyBallotTypeQueries.assemble(my_county).stream().forEach(Persistence::save);
         }
         
         // commit any uncommitted records

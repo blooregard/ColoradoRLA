@@ -641,7 +641,13 @@ public class CVRExportImport extends AbstractCountyDashboardEndpoint {
           final DoSDashboard dosdb = Persistence.getByID(DoSDashboard.ID, DoSDashboard.class);
 
           for (final CountyContestResult ccr : contest_results) {
-            if (ccr.minMargin() == 0) { 
+            if (ccr.losers().size() == 0) {
+              final ContestToAudit cta = new ContestToAudit(ccr.contest(), 
+                                                            AuditReason.NON_CONTEST, 
+                                                            AuditType.NOT_AUDITABLE);
+              dosdb.updateContestToAudit(cta);
+              result = result + 1;
+            } else if (ccr.minMargin() == 0) { 
               // this is a tied contest
               final ContestToAudit cta = new ContestToAudit(ccr.contest(), 
                                                             AuditReason.TIED_CONTEST, 
