@@ -16,11 +16,11 @@
 
 package us.freeandfair.corla.crypto;
 
-import static org.testng.Assert.assertEquals;
+import static org.junit.Assert.assertEquals;
 
 import java.io.File;
 
-import org.testng.annotations.Test;
+import org.junit.Test;
 
 /**
  * A test case for the PseudoRandomNumberGenerator.

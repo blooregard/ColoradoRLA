@@ -15,12 +15,12 @@
  */
 
 package us.freeandfair.corla.crypto;
+import static org.junit.Assert.*;
 
 import java.util.Arrays;
 import java.util.List;
 
-import org.testng.Assert;
-import org.testng.annotations.Test;
+import org.junit.Test;
 
 /**
  * A test case for the PseudoRandomNumberGenerator.
@@ -44,7 +44,7 @@ public class PseudoRandomNumberGeneratorTest {
         .asList(740, 180, 264, 789, 238, 448, 272, 611, 761, 208, 596, 88, 160, 113, 766, 427,
                 184, 816, 653, 411, 779, 331, 339, 487, 594, 235, 65, 527, 821, 490, 461, 251,
                 471, 414, 174, 567, 300, 134, 144, 357, 786, 792, 218, 550, 787, 537, 197);
-    Assert.assertEquals(numbers, expected);
+    assertEquals(numbers, expected);
   }
 
   /**
@@ -61,7 +61,7 @@ public class PseudoRandomNumberGeneratorTest {
         .asList(65, 88, 113, 134, 144, 160, 174, 180, 184, 208, 218, 235, 238, 251, 264, 272,
                 300, 331, 339, 357, 411, 414, 427, 448, 461, 471, 487, 490, 527, 537, 550, 567,
                 594, 596, 611, 611, 653, 740, 761, 766, 779, 786, 787, 789, 792, 816, 821);
-    Assert.assertEquals(numbers, expected);
+    assertEquals(numbers, expected);
   }
 
   /**
@@ -69,8 +69,8 @@ public class PseudoRandomNumberGeneratorTest {
    */
   @Test()
   public void testSeedOnlyContainsDigits() {
-    Assert.assertFalse(PseudoRandomNumberGenerator.seedOnlyContainsDigits("AAAAAA"));
+    assertFalse(PseudoRandomNumberGenerator.seedOnlyContainsDigits("AAAAAA"));
 
-    Assert.assertTrue(PseudoRandomNumberGenerator.seedOnlyContainsDigits("1234567890"));
+    assertTrue(PseudoRandomNumberGenerator.seedOnlyContainsDigits("1234567890"));
   }
 }

@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+        "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+        "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping package="us.freeandfair.corla.model">
+    <class name="County" table="county">
+        <id name="my_id" column="id" unsaved-value="0" type="long" access="field">
+            <generator class="identity"/>
+        </id>
+
+        <property name="my_name" column="name" type="string" length="45" access="field"/>
+        <property name="my_version" column="version" type="long" access="field"/>
+    </class>
+</hibernate-mapping>

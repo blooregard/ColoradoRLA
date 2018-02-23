@@ -1,12 +1,13 @@
 package us.freeandfair.corla.model;
 
+import static org.junit.Assert.assertEquals;
+
 import java.lang.reflect.Field;
 import java.math.BigDecimal;
 import java.util.Collections;
 
-import org.testng.Assert;
-import org.testng.annotations.BeforeClass;
-import org.testng.annotations.Test;
+import org.junit.Before;
+import org.junit.Test;
 
 /**
  * Test cases for the CountyContestComparisonAudit class
@@ -36,8 +37,8 @@ public class CountyContestComparisonAuditTest {
  /**
    * Test setup method
    */
-  @BeforeClass
-  public void beforeClass() throws NoSuchFieldException, SecurityException, IllegalArgumentException, IllegalAccessException {
+  @Before
+  public void before() throws NoSuchFieldException, SecurityException, IllegalArgumentException, IllegalAccessException {
     CountyContestResult result;
     try {
       result = new CountyContestResultTest().createTestResult();
@@ -66,6 +67,6 @@ public class CountyContestComparisonAuditTest {
    */
   @Test
   public void initialSamplesToAudit() {
-    Assert.assertEquals(audit.initialSamplesToAudit(), SAMPLES_TO_AUDIT);
+    assertEquals(audit.initialSamplesToAudit(), SAMPLES_TO_AUDIT);
   }
 }

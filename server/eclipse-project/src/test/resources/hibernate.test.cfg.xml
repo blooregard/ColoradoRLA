@@ -1,0 +1,21 @@
+<!DOCTYPE hibernate-configuration PUBLIC
+        "-//Hibernate/Hibernate Configuration DTD 3.0//EN"
+        "http://hibernate.sourceforge.net/hibernate-configuration-3.0.dtd">
+
+<hibernate-configuration>
+    <session-factory>
+        <property name="dialect">org.hibernate.dialect.HSQLDialect</property>
+        <property name="hibernate.cache.use_query_cache">false</property>
+        <property name="hibernate.cache.use_second_level_cache">false</property>
+        <property name="hbm2ddl.auto">create</property> <!-- this will let us create the test database automatically from our mapping files (or annotations) -->
+        <property name="hibernate.show_sql">true</property> <!-- not necessary but nice to have so that you can see what hibernate is actually doing and when. -->
+        <property name="connection.driver_class">org.hsqldb.jdbcDriver</property>
+        <property name="connection.url">jdbc:hsqldb:mem:corla;sql.syntax_pgs=true</property><!-- mem protocol will make it an in memory db -->
+        <property name="connection.username">sa</property>
+        <property name="connection.password"></property>
+        <property name="connection.pool_size">1</property>
+        
+        <mapping resource="corla.hbm.xml"/>
+        
+    </session-factory>
+</hibernate-configuration>
