@@ -19,7 +19,7 @@ export const helpTel = '555-555-5555';
 
 export const pollDelay
     = debug
-    ? 1000 * 5
+    ? 1000 * 5000
     : 1000 * 30;
 
 

@@ -162,6 +162,11 @@ public class CountyContestResult implements PersistentEntity, Serializable {
    * The total number of ballots cast in this county that contain this contest.
    */
   private Integer my_contest_ballot_count = 0;
+  
+  /**
+   * The total number of ballots cast in this county for the party.
+   */
+  private Integer my_party_ballot_count = 0;
 
   /**
    * Constructs a new empty CountyContestResult (solely for persistence).
@@ -395,6 +400,13 @@ public class CountyContestResult implements PersistentEntity, Serializable {
   public Integer countyBallotCount() {
     return my_county_ballot_count;
   }
+  
+  /**
+   * @return the number of ballots cast in this party.
+   */
+  public Integer partyBallotCount() {
+    return my_party_ballot_count;
+  }
 
   /**
    * @return the maximum margin between a winner and a loser.
@@ -456,6 +468,30 @@ public class CountyContestResult implements PersistentEntity, Serializable {
 
     return result;
   }
+  
+  /**
+   * @return the diluted margin for this primary contest, defined as the minimum 
+   *         margin divided by the number of party specific ballots cast in this'
+   *         county.
+   * @exception IllegalStateException if no ballots have been counted.
+   */
+  public BigDecimal primaryContestDilutedMargin() {
+    BigDecimal result;
+    if (my_party_ballot_count > 0) {
+      result = BigDecimal.valueOf(my_min_margin)
+          .divide(BigDecimal.valueOf(my_party_ballot_count), MathContext.DECIMAL128);
+      if (my_losers.isEmpty()) {
+        // if we only have winners, there is no margin
+        result = BigDecimal.ONE;
+      }
+
+      // TODO: how do we handle a tie?
+    } else {
+      throw new IllegalStateException("attempted to calculate diluted margin with no ballots");
+    }
+
+    return result;
+  }
 
   /**
    * Reset the vote totals and all related data in this CountyContestResult.
@@ -480,9 +516,9 @@ public class CountyContestResult implements PersistentEntity, Serializable {
       for (final String s : ci.choices()) {
         my_vote_totals.put(s, my_vote_totals.get(s) + 1);
       }
-      my_contest_ballot_count = Integer.valueOf(my_contest_ballot_count + 1);
+      my_contest_ballot_count++;     
     }
-    my_county_ballot_count = Integer.valueOf(my_county_ballot_count + 1);
+    my_county_ballot_count++;
   }
 
   /**

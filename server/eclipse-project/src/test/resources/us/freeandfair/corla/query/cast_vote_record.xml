@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<dataset>
+ <cast_vote_record id="93812" ballot_type="District Style 2" batch_id="1" county_id="1" cvr_number="1" imprinted_id="5-1-7" record_id="7" record_type="UPLOADED" scanner_id="5" sequence_number="0" timestamp="2018-06-01 00:00:00.0" version="0"></cast_vote_record>
+ <cast_vote_record id="93813" ballot_type="District Style 2" batch_id="1" county_id="1" cvr_number="2" imprinted_id="5-1-8" record_id="8" record_type="UPLOADED" scanner_id="5" sequence_number="1" timestamp="2018-06-01 00:00:00.0" version="0"></cast_vote_record>
+ <cast_vote_record id="93814" ballot_type="District Style 2" batch_id="1" county_id="1" cvr_number="3" imprinted_id="5-1-9" record_id="9" record_type="UPLOADED" scanner_id="5" sequence_number="2" timestamp="2018-06-01 00:00:00.0" version="0"></cast_vote_record>	
+ <cast_vote_record id="93828" ballot_type="District Style 1" batch_id="1" county_id="1" cvr_number="17" imprinted_id="5-1-17" record_id="27" record_type="UPLOADED" scanner_id="5" sequence_number="16" timestamp="2018-06-01 00:00:00.0" version="0"></cast_vote_record>
+</dataset>

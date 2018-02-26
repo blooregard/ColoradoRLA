@@ -23,6 +23,7 @@ import java.util.OptionalLong;
 import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
+import java.util.stream.Collectors;
 
 import us.freeandfair.corla.Main;
 import us.freeandfair.corla.crypto.PseudoRandomNumberGenerator;
@@ -40,10 +41,14 @@ import us.freeandfair.corla.model.CountyContestComparisonAudit;
 import us.freeandfair.corla.model.CountyContestResult;
 import us.freeandfair.corla.model.CountyDashboard;
 import us.freeandfair.corla.model.DoSDashboard;
+import us.freeandfair.corla.model.ElectionType;
+import us.freeandfair.corla.model.PartyBallotType;
+import us.freeandfair.corla.model.PoliticalParty;
 import us.freeandfair.corla.model.Round;
 import us.freeandfair.corla.persistence.Persistence;
 import us.freeandfair.corla.query.CastVoteRecordQueries;
 import us.freeandfair.corla.query.CountyContestResultQueries;
+import us.freeandfair.corla.query.PartyBallotTypeQueries;
 
 /**
  * Controller methods relevant to comparison audits.
@@ -348,6 +353,7 @@ public final class ComparisonAuditController {
     final DoSDashboard dosdb =
         Persistence.getByID(DoSDashboard.ID, DoSDashboard.class);
     final BigDecimal risk_limit = dosdb.auditInfo().riskLimit();
+    final ElectionType election = ElectionType.valueOf(dosdb.auditInfo().electionType());
     final Set<Contest> all_driving_contests = new HashSet<>();
     final Set<Contest> county_driving_contests = new HashSet<>();
     final Set<CountyContestComparisonAudit> comparison_audits = new HashSet<>();
@@ -370,9 +376,20 @@ public final class ComparisonAuditController {
       if (reason == null) {
         reason = AuditReason.OPPORTUNISTIC_BENEFITS;
       }
+     
       final CountyContestComparisonAudit audit = 
           new CountyContestComparisonAudit(the_cdb, ccr, risk_limit, reason);
       final Contest contest = audit.contest();
+      
+      if (election == ElectionType.primary && PoliticalParty.contains(contest.description())) {
+        final PoliticalParty party = PoliticalParty.ignoreCaseValueOf(contest.description());
+        final List<PartyBallotType> partyBallots = PartyBallotTypeQueries.matching(the_cdb.county(),party);
+        final List<String> ballotStyles = partyBallots.stream().map(pb -> pb.ballotType()).collect(Collectors.toList());
+        final List<CastVoteRecord> cvrs = CastVoteRecordQueries.get(the_cdb.county().id(), ballotStyles);
+
+        System.out.println(cvrs);
+      }
+     
       comparison_audits.add(audit);
       if (all_driving_contests.contains(contest)) {
         to_audit = Math.max(to_audit, audit.initialSamplesToAudit());

@@ -59,6 +59,11 @@ public final class CastVoteRecordQueries {
   private static final String RECORD_TYPE = "my_record_type";
   
   /**
+   * The "ballot type" field.
+   */
+  private static final String BALLOT_TYPE = "my_ballot_type";
+  
+  /**
    * The "could not query database for CVRs error message.
    */
   private static final String COULD_NOT_QUERY_DATABASE = 
@@ -290,6 +295,46 @@ public final class CastVoteRecordQueries {
     }
     
     return result;
+  }
+  
+  /**
+   * Obtain the CastVoteRecord objects with the specified county and
+   * and record types. 
+   *
+   * @param the_county_id The county.
+   * @param the_sequence_number.
+   * @return the matching CastVoteRecord objecta, or null if no objects match
+   * or the query fails.
+   */
+  // we are checking to see if exactly one result is in a list, and
+  // PMD doesn't like it
+  @SuppressWarnings("PMD.AvoidLiteralsInIfCondition")
+  public static List<CastVoteRecord> get(final Long the_county_id,
+                                   final List<String> the_ballot_types) {
+    List<CastVoteRecord> results = null;
+   
+    try {
+      final Session s = Persistence.currentSession();
+      final CriteriaBuilder cb = s.getCriteriaBuilder();
+      final CriteriaQuery<CastVoteRecord> cq = cb.createQuery(CastVoteRecord.class);
+      final Root<CastVoteRecord> root = cq.from(CastVoteRecord.class);
+      final List<Predicate> conjuncts = new ArrayList<Predicate>();
+      conjuncts.add(cb.equal(root.get(COUNTY_ID), the_county_id));
+      conjuncts.add(root.get(BALLOT_TYPE).in(the_ballot_types));
+      cq.select(root).where(cb.and(conjuncts.toArray(new Predicate[conjuncts.size()])));
+      final TypedQuery<CastVoteRecord> query = s.createQuery(cq);
+      results = query.getResultList();
+    } catch (final PersistenceException e) {
+      Main.LOGGER.error(COULD_NOT_QUERY_DATABASE);
+    }
+    if (results == null) {
+      Main.LOGGER.debug("found no CVRs for county " + the_county_id +
+                        ", ballot types " + the_ballot_types);
+    } else {
+      Main.LOGGER.debug("found CVRs " + results.size());
+    }
+    
+    return results;
   }
   
   /**

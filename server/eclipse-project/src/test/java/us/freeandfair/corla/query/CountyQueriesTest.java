@@ -25,19 +25,6 @@ import us.freeandfair.corla.model.County;
 import us.freeandfair.corla.persistence.Persistence;
 
 public class CountyQueriesTest extends HibernateDbUnitTestCase {
-  
-  public CountyQueriesTest() throws ClassNotFoundException {
-  }
-
-  @BeforeClass
-  public void before() throws FileNotFoundException, IOException {
-
-  }
-
-  @AfterClass
-  public void after() {
-
-  }
 
   protected IDataSet getDataSet() throws DataSetException {
     final InputStream stream = this.getClass().getResourceAsStream("/us/freeandfair/corla/query/county.xml");

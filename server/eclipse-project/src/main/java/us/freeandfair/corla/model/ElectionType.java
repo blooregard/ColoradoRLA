@@ -19,18 +19,16 @@ package us.freeandfair.corla.model;
 import java.util.Locale;
 
 /**
- * The political parties which can participate in a primary election.
+ * The election types.
  * 
  * @author Ben Rector <ben.rector@sos.state.co.us>
  * @version 1.0.0
  */
-public enum PoliticalParty {
-  DEM("Democratic"), 
-  REP("Republican"), 
-  ACN("American Constitution"), 
-  GRN("Green"), 
-  LBR("Libertarian"), 
-  UNI("Unity");
+public enum ElectionType {
+  coordinated("Coordinated"),
+  general("General"),
+  primary("Primary"), 
+  recall("Recall");
 
   /**
    * The pretty printing string for this enum value.
@@ -38,11 +36,11 @@ public enum PoliticalParty {
   private final String my_pretty_string;
 
   /**
-   * Constructs a new PoliticalParty.
+   * Constructs a new election type.
    * 
    * @param the_pretty_string The pretty printing string.
    */
-  private PoliticalParty(final String the_pretty_string) {
+  private ElectionType(final String the_pretty_string) {
     my_pretty_string = the_pretty_string;
   }
   
@@ -52,8 +50,8 @@ public enum PoliticalParty {
   public static boolean contains(final String value) {
     boolean found = false;
 
-    for (final PoliticalParty p : PoliticalParty.values()) {
-      if (p.name().equalsIgnoreCase(value)) {
+    for (final ElectionType e : ElectionType.values()) {
+      if (e.name().equalsIgnoreCase(value)) {
         found = true;
         break;
       }
@@ -65,8 +63,8 @@ public enum PoliticalParty {
   /**
    * Convenience pass through class method
    */
-  public static PoliticalParty ignoreCaseValueOf(final String name) {
-    return Enum.valueOf(PoliticalParty.class, name.toUpperCase(Locale.getDefault()));
+  public static ElectionType ignoreCaseValueOf(final String name) {
+    return Enum.valueOf(ElectionType.class, name.toUpperCase(Locale.getDefault()));
   }
 
   /**

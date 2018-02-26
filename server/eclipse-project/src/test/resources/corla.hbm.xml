@@ -11,4 +11,22 @@
         <property name="my_name" column="name" type="string" length="45" access="field"/>
         <property name="my_version" column="version" type="long" access="field"/>
     </class>
+    <class name="CastVoteRecord" table="cast_vote_record">
+        <id name="my_id" column="id" unsaved-value="0" type="long" access="field">
+            <generator class="identity"/>
+        </id>
+
+        <property name="my_ballot_type" column="ballot_type" type="string" length="255" access="field"/>
+        <property name="my_batch_id" column="batch_id" type="short" access="field"/>
+        <property name="my_county_id" column="county_id" type="int" access="field"/>
+        <property name="my_cvr_number" column="cvr_number" type="short" access="field"/>
+        <property name="my_imprinted_id" column="imprinted_id" type="string" length="255" access="field"/>
+        <property name="my_record_id" column="record_id" type="short" access="field"/>
+        <property name="my_record_type" column="record_type" type="string" length="255" access="field"/>
+        <property name="my_scanner_id" column="scanner_id" type="short" access="field"/>
+        <property name="my_sequence_number" column="sequence_number" type="short" access="field"/>
+        <property name="my_timestamp" column="timestamp" type="timestamp" access="field" not-null="false"/>
+        <property name="my_version" column="version" type="long" access="field"/>
+    </class>
+    
 </hibernate-mapping>
