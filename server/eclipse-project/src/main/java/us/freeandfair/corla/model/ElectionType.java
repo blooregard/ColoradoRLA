@@ -40,7 +40,7 @@ public enum ElectionType {
    * 
    * @param the_pretty_string The pretty printing string.
    */
-  private ElectionType(final String the_pretty_string) {
+  ElectionType(final String the_pretty_string) {
     my_pretty_string = the_pretty_string;
   }
   

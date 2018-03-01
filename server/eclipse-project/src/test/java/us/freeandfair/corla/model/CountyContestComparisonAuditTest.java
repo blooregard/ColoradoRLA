@@ -44,7 +44,7 @@ public class CountyContestComparisonAuditTest {
       result = new CountyContestResultTest().createTestResult();
       result.updateResults();
      
-      audit = new CountyContestComparisonAudit(null, result, riskLimit, AuditReason.COUNTY_WIDE_CONTEST);
+      audit = new CountyContestComparisonAudit(null, result, riskLimit, AuditReason.COUNTY_WIDE_CONTEST, ElectionType.general);
     
       final Field my_contest = CountyContestComparisonAudit.class.getDeclaredField("my_contest");
       

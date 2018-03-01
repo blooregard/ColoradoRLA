@@ -42,7 +42,7 @@ public enum PoliticalParty {
    * 
    * @param the_pretty_string The pretty printing string.
    */
-  private PoliticalParty(final String the_pretty_string) {
+  PoliticalParty(final String the_pretty_string) {
     my_pretty_string = the_pretty_string;
   }
   

@@ -174,6 +174,13 @@ public class CountyContestComparisonAudit implements PersistentEntity {
   private AuditReason my_audit_reason;
   
   /**
+   * The election type.
+   */
+  @Column(updatable = false, nullable = false)
+  @Enumerated(EnumType.STRING)
+  private ElectionType my_election_type;
+  
+  /**
    * The status of this audit.
    */
   @Column(nullable = false)
@@ -307,13 +314,15 @@ public class CountyContestComparisonAudit implements PersistentEntity {
   public CountyContestComparisonAudit(final CountyDashboard the_dashboard,
                                       final CountyContestResult the_contest_result,
                                       final BigDecimal the_risk_limit,
-                                      final AuditReason the_audit_reason) {
+                                      final AuditReason the_audit_reason,
+                                      final ElectionType the_election_type) {
     super();
     my_dashboard = the_dashboard;
     my_contest_result = the_contest_result;
     my_contest = my_contest_result.contest();
     my_risk_limit = the_risk_limit;
     my_audit_reason = the_audit_reason;
+    my_election_type = the_election_type;
     if (the_contest_result.countyDilutedMargin().equals(BigDecimal.ZERO)) {
       // the county diluted margin is 0, so this contest is not auditable
       my_audit_status = AuditStatus.NOT_AUDITABLE;
@@ -384,6 +393,13 @@ public class CountyContestComparisonAudit implements PersistentEntity {
    */
   public AuditReason auditReason() {
     return my_audit_reason;
+  }
+  
+  /**
+   * @return the audit reason associated with this audit.
+   */
+  public ElectionType electionType() {
+    return my_election_type;
   }
   
   /**
@@ -510,11 +526,13 @@ public class CountyContestComparisonAudit implements PersistentEntity {
                                                      final int the_one_over,
                                                      final int the_two_over) {
     final BigDecimal result;
+    BigDecimal dilutedMargin = BigDecimal.ZERO;
+    
     if (my_audit_status == AuditStatus.NOT_AUDITABLE) {
       // the contest is not auditable, so return the number of ballots in the county
       // (for lack of a better number)
       result = BigDecimal.valueOf(my_contest_result.countyBallotCount());
-    } else {
+    } else {  
       final BigDecimal invgamma = BigDecimal.ONE.divide(my_gamma, MathContext.DECIMAL128);
       final BigDecimal twogamma = BigDecimal.valueOf(2).multiply(my_gamma);
       final BigDecimal invtwogamma = 
@@ -542,14 +560,21 @@ public class CountyContestComparisonAudit implements PersistentEntity {
           twogamma.negate().
           multiply(BigDecimalMath.log(my_risk_limit, MathContext.DECIMAL128).
                    add(two_under.add(one_under).add(one_over).add(two_over)));
+      
+      if (my_election_type == ElectionType.primary) {
+        dilutedMargin = my_contest_result.primaryContestDilutedMargin();
+      } else {
+        dilutedMargin = my_contest_result.countyDilutedMargin();
+      }
+      
       final BigDecimal ceil =
-          numerator.divide(my_contest_result.countyDilutedMargin(),
+          numerator.divide(dilutedMargin,
                            MathContext.DECIMAL128).setScale(0, RoundingMode.CEILING);
       result = ceil.max(over_under_sum);
     }
     
     Main.LOGGER.info("estimate for contest " + contest().name() + 
-                     ", diluted margin " + contestResult().countyDilutedMargin() + 
+                     ", diluted margin " + dilutedMargin + 
                      ": " + result);
     return result;
   }

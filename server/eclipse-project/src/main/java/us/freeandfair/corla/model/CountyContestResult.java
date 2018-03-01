@@ -407,6 +407,13 @@ public class CountyContestResult implements PersistentEntity, Serializable {
   public Integer partyBallotCount() {
     return my_party_ballot_count;
   }
+  
+  /**
+   * @return the number of ballots cast in this party.
+   */
+  public void setPartyBallotCount(final int the_party_ballot_count) {
+    my_party_ballot_count = the_party_ballot_count;
+  }
 
   /**
    * @return the maximum margin between a winner and a loser.
@@ -516,9 +523,9 @@ public class CountyContestResult implements PersistentEntity, Serializable {
       for (final String s : ci.choices()) {
         my_vote_totals.put(s, my_vote_totals.get(s) + 1);
       }
-      my_contest_ballot_count++;     
+      ++my_contest_ballot_count;     
     }
-    my_county_ballot_count++;
+    ++my_county_ballot_count;
   }
 
   /**
