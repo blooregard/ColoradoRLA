@@ -378,6 +378,26 @@ public class CountyContestResult implements PersistentEntity, Serializable {
 
     return result;
   }
+  
+  /**
+   * Computes the diluted margin between the specified choice and the nearest
+   * loser. If the specified choice is the last choice or is not a valid choice,
+   * or the margin is undefined, the result is null.
+   * 
+   * @param the_choice The choice.
+   * @return the margin.
+   */
+  public BigDecimal partyDilutedMarginToNearestLoser(final String the_choice) {
+    BigDecimal result = null;
+    final OptionalInt margin = marginToNearestLoser(the_choice);
+
+    if (margin.isPresent() && my_party_ballot_count > 0) {
+      result = BigDecimal.valueOf(margin.getAsInt())
+          .divide(BigDecimal.valueOf(my_party_ballot_count), MathContext.DECIMAL128);
+    }
+
+    return result;
+  }
 
   /**
    * @return the number of winners allowed in this contest.

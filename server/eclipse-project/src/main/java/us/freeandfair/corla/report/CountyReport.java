@@ -13,14 +13,10 @@ package us.freeandfair.corla.report;
 
 import static us.freeandfair.corla.util.PrettyPrinter.booleanYesNo;
 
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
 import java.math.BigDecimal;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
-import java.time.format.DateTimeFormatter;
-import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -49,7 +45,6 @@ import us.freeandfair.corla.model.CastVoteRecord.RecordType;
 import us.freeandfair.corla.model.County;
 import us.freeandfair.corla.model.CountyContestResult;
 import us.freeandfair.corla.model.CountyDashboard;
-import us.freeandfair.corla.model.DoSDashboard;
 import us.freeandfair.corla.model.Round;
 import us.freeandfair.corla.persistence.Persistence;
 import us.freeandfair.corla.query.CountyContestResultQueries;
@@ -62,36 +57,13 @@ import us.freeandfair.corla.query.CountyContestResultQueries;
  */
 @SuppressWarnings({"PMD.CyclomaticComplexity", "PMD.StdCyclomaticComplexity",
     "PMD.ModifiedCyclomaticComplexity", "PMD.ExcessiveImports", "PMD.GodClass"})
-public class CountyReport {
+public class CountyReport extends AbstractReport {
   /**
    * The affirmation statement.
    */
   public static final String AFFIRMATION_STATEMENT = 
       "We hereby affirm that the results presented in this report\n" + 
       "are accurate to the best of our knowledge.";
-  
-  /**
-   * The font size for Excel.
-   */
-  @SuppressWarnings("PMD.AvoidUsingShortType")
-  public static final short FONT_SIZE = 12;
-  
-  /**
-   * The date formatter.
-   */
-  private static final DateTimeFormatter DATE_FORMATTER = 
-      DateTimeFormatter.ofPattern("MM/dd/yyyy");
-  
-  /**
-   * The date/time formatter.
-   */
-  private static final DateTimeFormatter DATE_TIME_FORMATTER = 
-      DateTimeFormatter.ofPattern("MM/dd/yyyy hh:mm a");
-  
-  /**
-   * The DoS dashboard used to generate this report.
-   */
-  private final DoSDashboard my_dosdb;
   
   /**
    * The county dashboard used to generate this report.
@@ -102,12 +74,7 @@ public class CountyReport {
    * The county for which this report was generated.
    */
   private final County my_county;
-  
-  /**
-   * The date and time this report was generated.
-   */
-  private final Instant my_timestamp;
-  
+
   /**
    * The CVRs to audit for each round.
    */
@@ -140,6 +107,8 @@ public class CountyReport {
    * @param the_timestamp The timestamp.
    */
   public CountyReport(final County the_county, final Instant the_timestamp) {
+    super();
+    
     my_county = the_county;
     my_timestamp = the_timestamp;
     my_driving_contest_results = new ArrayList<CountyContestResult>();
@@ -159,7 +128,6 @@ public class CountyReport {
       cvrs_to_audit.sort(new CVRAuditInfo.BallotOrderComparator());
       my_cvrs_to_audit_by_round.put(r.number(), cvrs_to_audit);
     }
-    my_dosdb = Persistence.getByID(DoSDashboard.ID, DoSDashboard.class);
   }
   
   /**
@@ -168,14 +136,7 @@ public class CountyReport {
   public County county() {
     return my_county;
   }
-  
-  /**
-   * @return the timestamp for this report.
-   */
-  public Instant timestamp() {
-    return my_timestamp;
-  }
-  
+
   /**
    * @return the CVRs imprinted IDs to audit by round map for this report.
    */
@@ -203,25 +164,11 @@ public class CountyReport {
   public CountyDashboard dashboard() {
     return my_cdb;
   }
-  
-  /**
-   * @return the Excel representation of this report, as a byte array.
-   * @exception IOException if the report cannot be generated.
-   */
-  public byte[] generateExcel() throws IOException {
-    final ByteArrayOutputStream baos = new ByteArrayOutputStream();
-    final Workbook workbook = generateExcelWorkbook();
-    workbook.write(baos);
-    baos.flush();
-    baos.close();
-    workbook.close();
-    return baos.toByteArray();
-  }
-  
+
   /**
    * @return the Excel workbook for this report.
    */
-  @SuppressWarnings({"checkstyle:magicnumber", "checkstyle:executablestatementcount",
+  @SuppressWarnings({"checkstyle:executablestatementcount",
       "checkstyle:methodlength", "PMD.ExcessiveMethodLength", "PMD.NcssMethodCount",
       "PMD.NPathComplexity", "PMD.AvoidLiteralsInIfCondition"})
   public Workbook generateExcelWorkbook() {
@@ -592,9 +539,9 @@ public class CountyReport {
           cell = row.createCell(cell_number++);
           cell.setCellStyle(decimal_style);
           cell.setCellType(CellType.NUMERIC);
-          final BigDecimal diluted_margin = ccr.countyDilutedMarginToNearestLoser(choice);
+          final BigDecimal diluted_margin = getDilutedMargin(ccr, choice);
           if (diluted_margin != null) {
-            cell.setCellValue(diluted_margin.doubleValue() * 100);
+            cell.setCellValue(diluted_margin.doubleValue() * PERCENTAGE);
           }
         }
       }
@@ -800,7 +747,7 @@ public class CountyReport {
       cell = row.createCell(cell_number++);
       cell.setCellType(CellType.STRING);
       cell.setCellStyle(box_style);
-      row.setHeight((short) 800);
+      row.setHeight((short) TALL_BOX);
     }
     
     cell_number = 0;
@@ -817,7 +764,7 @@ public class CountyReport {
     cell.setCellType(CellType.STRING);
     cell.setCellStyle(box_style);
     
-    row.setHeight((short) 800);
+    row.setHeight((short) TALL_BOX);
     
     affirmation_sheet.autoSizeColumn(0);
     
@@ -825,42 +772,9 @@ public class CountyReport {
   }
   
   /**
-   * @return the PDF representation of this report, as a byte array.
+   * 
    */
-  public byte[] generatePDF() {
-    return new byte[0];
-  }
-  
-  /**
-   * @return the filename for the Excel version of this report.
-   */
-  public String filenameExcel() {
-    // the file name should be constructed from the county name, election
-    // type and date, and report generation time
-    final LocalDateTime election_datetime = 
-        LocalDateTime.ofInstant(my_dosdb.auditInfo().electionDate(), ZoneOffset.UTC);
-    final LocalDateTime report_datetime = 
-        LocalDateTime.ofInstant(my_timestamp, TimeZone.getDefault().toZoneId()).
-        truncatedTo(ChronoUnit.SECONDS);
-    final StringBuilder sb = new StringBuilder(32);
-    
-    sb.append(my_county.name().toLowerCase(Locale.getDefault()).replace(" ", "_"));
-    sb.append('-');
-    sb.append(my_dosdb.auditInfo().electionType().
-              toLowerCase(Locale.getDefault()).replace(" ", "_"));
-    sb.append('-');
-    sb.append(DATE_FORMATTER.format(election_datetime).replace("/", "-"));
-    sb.append("-report-");
-    sb.append(DATE_TIME_FORMATTER.format(report_datetime).replace("/", "-").replace(":", "_"));
-    sb.append(".xlsx");
-    
-    return sb.toString();
-  }
-  
-  /**
-   * @return the filename for the PDF version of this report.
-   */
-  public String filenamePDF() {
-    return filenameExcel().replaceAll(".xlsx$", ".pdf");
+  public String filename() {
+    return my_county.name().toLowerCase(Locale.getDefault()).replace(" ", "_");
   }
 }
