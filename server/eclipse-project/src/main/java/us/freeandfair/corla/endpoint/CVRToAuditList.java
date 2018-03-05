@@ -2,10 +2,15 @@
  * Free & Fair Colorado RLA System
  * 
  * @title ColoradoRLA
+ * 
  * @created Jul 27, 2017
+ * 
  * @copyright 2017 Colorado Department of State
+ * 
  * @license SPDX-License-Identifier: AGPL-3.0-or-later
+ * 
  * @creator Daniel M. Zimmerman <dmz@freeandfair.us>
+ * 
  * @description A system to assist in conducting statewide risk-limiting audits.
  */
 
@@ -30,7 +35,7 @@ import us.freeandfair.corla.model.County;
  */
 @SuppressWarnings("PMD.AtLeastOneConstructor")
 public class CVRToAuditList extends AbstractCVRToAudit {
-  
+
   /**
    * {@inheritDoc}
    */
@@ -38,7 +43,7 @@ public class CVRToAuditList extends AbstractCVRToAudit {
   public String endpointName() {
     return "/cvr-to-audit-list";
   }
-  
+
   /**
    * {@inheritDoc}
    */
@@ -48,9 +53,10 @@ public class CVRToAuditList extends AbstractCVRToAudit {
     // we know we have either state or county authentication; this will be null
     // for state authentication
     final County county = getAuthenticatedCounty(the_request, the_response);
-    
+
     try {
-      final List<CVRToAuditResponse> response_list = getListOfCVRs(county, the_request, the_response);
+      final List<CVRToAuditResponse> response_list =
+          getListOfCVRs(county, the_request, the_response);
       okJSON(the_response, Main.GSON.toJson(response_list));
     } catch (final PersistenceException e) {
       serverError(the_response, "could not generate cvr list");
