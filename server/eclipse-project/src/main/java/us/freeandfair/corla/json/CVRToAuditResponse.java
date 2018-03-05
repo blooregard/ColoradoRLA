@@ -14,6 +14,7 @@ package us.freeandfair.corla.json;
 import java.io.Serializable;
 import java.util.Comparator;
 
+import us.freeandfair.corla.model.PoliticalParty;
 import us.freeandfair.corla.util.SuppressFBWarnings;
 
 /**
@@ -77,6 +78,11 @@ public class CVRToAuditResponse {
   protected final boolean my_audited;
   
   /**
+   * An Enumeration that connects a political party to a primary cvr.
+   */
+  protected final PoliticalParty my_party;
+  
+  /**
    * Create a new response object.
    * 
    * @param the_audit_sequence_number The audit sequence number.
@@ -100,7 +106,8 @@ public class CVRToAuditResponse {
                             final long the_db_id,
                             final String the_ballot_type,
                             final String the_storage_location,
-                            final boolean the_audited) {
+                            final boolean the_audited,
+                            final PoliticalParty the_party) {
     my_audit_sequence_number = the_audit_sequence_number;
     my_scanner_id = the_scanner_id;
     my_batch_id = the_batch_id;
@@ -111,6 +118,7 @@ public class CVRToAuditResponse {
     my_ballot_type = the_ballot_type;
     my_storage_location = the_storage_location;
     my_audited = the_audited;
+    my_party = the_party;
   }
   
   /**
@@ -181,6 +189,13 @@ public class CVRToAuditResponse {
    */
   public boolean audited() {
     return my_audited;
+  }
+  
+  /**
+   * @return the political party.
+   */
+  public PoliticalParty party() {
+    return my_party;
   }
   
   /**
