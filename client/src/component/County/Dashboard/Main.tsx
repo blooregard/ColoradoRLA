@@ -2,6 +2,8 @@ import * as React from 'react';
 
 import FileUploadContainer from './FileUploadContainer';
 
+import downloadCvrsToAuditCsv from 'corla/action/county/downloadCvrsToAuditCsv';
+
 import fetchReport from 'corla/action/county/fetchReport';
 
 import FileDownloadButtons from 'corla/component/FileDownloadButtons';
@@ -88,42 +90,56 @@ const Main = (props: MainProps) => {
                               : <div />;
 
     const reportType = auditComplete
-                     ? 'final'
-                     : 'intermediate';
+                     ? 'Final'
+                     : 'Intermediate';
+
+    const downloadCsv = () => downloadCvrsToAuditCsv(currentRoundNumber);
 
     return (
         <div className='county-main pt-card'>
             <h1>Hello, { name } County!</h1>
             <div>
-                <div className='pt-card'>{ directions }</div>
+                <div className='pt-card'><h3>{ directions }</h3></div>
                 { fileUploadContainer }
                 { fileDownloadButtons }
                 <AuditBoardInfo signedIn={ auditBoardSignedIn } />
                 <div className='pt-card'>
-                    <div>Click to download { reportType} audit report.</div>
+                    <div>{ reportType} audit report (CSV)</div>
                     <button
-                        className='pt-button'
+                        className='pt-button  pt-intent-primary'
                         disabled={ !canRenderReport }
                         onClick={ fetchReport }>
                         Download
                     </button>
                 </div>
-                <button
-                    className='pt-button pt-intent-primary'
-                    disabled={ signInButtonDisabled }
-                    onClick={ boardSignIn }>
-                    <span className='pt-icon-standard pt-icon-people' />
-                    <span> </span>
-                    Audit Board
-                </button>
-                <button
-                    className='pt-button pt-intent-primary'
-                    disabled={ auditButtonDisabled }
-                    onClick={ startAudit }>
-                    <span className='pt-icon-standard pt-icon-eye-open' />
-                    <span> </span>
-                    Start Audit
-                </button>
+                <div className='pt-card'>
+                    <div>List of ballots to audit (CSV)</div>
+                    <button
+                        className='pt-button  pt-intent-primary'
+                        disabled={ !canRenderReport }
+                        onClick={ downloadCsv }>
+                        Download
+                    </button>
+                </div>
+                <div>
+                  <button
+                      className='pt-button pt-intent-primary'
+                      disabled={ signInButtonDisabled }
+                      onClick={ boardSignIn }>
+                      <span className='pt-icon-standard pt-icon-people' />
+                      <span> </span>
+                      Audit Board
+                  </button>
+                  <span> </span> 
+                  <button
+                      className='pt-button pt-intent-primary'
+                      disabled={ auditButtonDisabled }
+                      onClick={ startAudit }>
+                      <span className='pt-icon-standard pt-icon-eye-open' />
+                      <span> </span>
+                      Start Audit
+                  </button>
+                </div>
             </div>
         </div>
     );
